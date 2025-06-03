@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'sign_up_page.dart';
 
-class HomePage extends StatelessWidget {
+class SignUpPage extends StatelessWidget {
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -16,14 +16,9 @@ class HomePage extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromRGBO(122, 31, 31, 1), // Deep maroon
-                  const Color.fromRGBO(200, 80, 80, 0.85), // Lighter maroon
-                  const Color.fromRGBO(
-                    240,
-                    180,
-                    180,
-                    0.7,
-                  ), // Very light maroon/pink
+                  const Color.fromRGBO(122, 31, 31, 1),
+                  const Color.fromRGBO(200, 80, 80, 0.85),
+                  const Color.fromRGBO(240, 180, 180, 0.7),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -55,9 +50,9 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ),
-          // Login form
+          // Sign up form
           Align(
-            alignment: Alignment(0, 0.5), // Move form a bit down
+            alignment: Alignment(0, 0.5),
             child: SingleChildScrollView(
               child: Card(
                 elevation: 8,
@@ -70,11 +65,18 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // Logo or icon
                       Icon(
-                        Icons.lock_outline,
+                        Icons.person_add_alt_1,
                         size: 48,
                         color: const Color.fromRGBO(122, 31, 31, 1),
+                      ),
+                      SizedBox(height: 16),
+                      TextField(
+                        controller: nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Name',
+                          border: OutlineInputBorder(),
+                        ),
                       ),
                       SizedBox(height: 16),
                       TextField(
@@ -102,32 +104,30 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          // Handle login logic here
+                          // Handle sign up logic here
+                          final name = nameController.text;
                           final email = emailController.text;
                           final password = passwordController.text;
                           // For now, just print
-                          print('Email: $email, Password: $password');
+                          print(
+                            'Name: $name, Email: $email, Password: $password',
+                          );
                         },
-                        child: Text('Login'),
+                        child: Text('Sign Up'),
                       ),
                       SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Don't have an account? "),
+                          Text("Already have an account? "),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignUpPage(),
-                                ),
-                              );
+                              Navigator.pop(context); // Go back to login
                             },
                             child: Text(
-                              'Sign up',
+                              'Login',
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Color.fromRGBO(122, 31, 31, 1),
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline,
                               ),
