@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUpPage extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +74,53 @@ class SignUpPage extends StatelessWidget {
                         color: const Color.fromRGBO(122, 31, 31, 1),
                       ),
                       SizedBox(height: 16),
+                      // Google Sign Up Button
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black87,
+                          minimumSize: Size(double.infinity, 48),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(color: Colors.grey.shade300),
+                          ),
+                          elevation: 2,
+                        ),
+                        icon: Image.network(
+                          'https://upload.wikimedia.org/wikipedia/commons/4/4a/Logo_2013_Google.png',
+                          height: 24,
+                          width: 24,
+                        ),
+                        label: Text('Sign up with Google'),
+                        onPressed: () async {
+                          final GoogleSignIn googleSignIn = GoogleSignIn();
+                          try {
+                            final GoogleSignInAccount? account =
+                                await googleSignIn.signIn();
+                            if (account != null) {
+                              print('Signed in with email: \\${account.email}');
+                              // You can now use account.email, account.displayName, etc.
+                              // Proceed with your app logic (e.g., navigate, register, etc.)
+                            }
+                          } catch (error) {
+                            print('Google sign in error: \\$error');
+                          }
+                        },
+                      ),
+                      SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(child: Divider()),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Text('or'),
+                          ),
+                          Expanded(child: Divider()),
+                        ],
+                      ),
+                      SizedBox(height: 12),
                       TextField(
                         controller: nameController,
                         decoration: InputDecoration(

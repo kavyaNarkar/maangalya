@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'sign_up_page.dart';
+import 'main_home_screen.dart';
 
 class HomePage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -102,11 +105,21 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         onPressed: () {
-                          // Handle login logic here
                           final email = emailController.text;
                           final password = passwordController.text;
-                          // For now, just print
-                          print('Email: $email, Password: $password');
+                          if (email == 'sublime@gmail.com' &&
+                              password == 'sublime@2025') {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MainHomeScreen(),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Invalid credentials')),
+                            );
+                          }
                         },
                         child: Text('Login'),
                       ),
