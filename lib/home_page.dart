@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'sign_up_page.dart';
 import 'main_home_screen.dart';
 
-class HomePage extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  HomePage({super.key});
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -16,17 +21,12 @@ class HomePage extends StatelessWidget {
         children: [
           // Gradient background
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromRGBO(122, 31, 31, 1), // Deep maroon
-                  const Color.fromRGBO(200, 80, 80, 0.85), // Lighter maroon
-                  const Color.fromRGBO(
-                    240,
-                    180,
-                    180,
-                    0.7,
-                  ), // Very light maroon/pink
+                  Color.fromRGBO(122, 31, 31, 1), // Deep maroon
+                  Color.fromRGBO(200, 80, 80, 0.85), // Lighter maroon
+                  Color.fromRGBO(240, 180, 180, 0.7), // Very light maroon/pink
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
               height: 180,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
           ),
@@ -54,90 +54,67 @@ class HomePage extends StatelessWidget {
               height: 120,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
               ),
             ),
           ),
           // Login form
           Align(
-            alignment: Alignment(0, 0.5), // Move form a bit down
+            alignment: const Alignment(0, 0.5), // Move form a bit down
             child: SingleChildScrollView(
               child: Card(
                 elevation: 8,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(24),
                 ),
-                margin: EdgeInsets.symmetric(horizontal: 24),
+                margin: const EdgeInsets.symmetric(horizontal: 24),
                 child: Padding(
-                  padding: const EdgeInsets.all(24.0),
+                  padding: const EdgeInsets.all(24),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       // Logo or icon
-                      Icon(
+                      const Icon(
                         Icons.lock_outline,
                         size: 48,
-                        color: const Color.fromRGBO(122, 31, 31, 1),
+                        color: Color.fromRGBO(122, 31, 31, 1),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
                           labelText: 'Email',
                           border: OutlineInputBorder(),
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       TextField(
-                        controller: passwordController,
-                        decoration: InputDecoration(
+                        controller: _passwordController,
+                        decoration: const InputDecoration(
                           labelText: 'Password',
                           border: OutlineInputBorder(),
                         ),
                         obscureText: true,
                       ),
-                      SizedBox(height: 24),
+                      const SizedBox(height: 24),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          minimumSize: Size(double.infinity, 48),
+                          minimumSize: const Size(double.infinity, 48),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        onPressed: () {
-                          final email = emailController.text;
-                          final password = passwordController.text;
-                          if (email == 'sublime@gmail.com' &&
-                              password == 'sublime@2025') {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MainHomeScreen(),
-                              ),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Invalid credentials')),
-                            );
-                          }
-                        },
-                        child: Text('Login'),
+                        onPressed: _handleLogin,
+                        child: const Text('Login'),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Don't have an account? "),
+                          const Text("Don't have an account? "),
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SignUpPage(),
-                                ),
-                              );
-                            },
-                            child: Text(
+                            onTap: _navigateToSignUp,
+                            child: const Text(
                               'Sign up',
                               style: TextStyle(
                                 color: Colors.blue,
@@ -157,5 +134,35 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _handleLogin() {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+
+    if (email == 'sublime@gmail.com' && password == 'sublime@2025') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MainHomeScreen()),
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Invalid credentials')));
+    }
+  }
+
+  void _navigateToSignUp() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignUpPage()),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

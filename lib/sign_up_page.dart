@@ -1,12 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'registration_page.dart';
 
-class SignUpPage extends StatelessWidget {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
 
-  SignUpPage({super.key});
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  Future<void> _handleGoogleSignIn() async {
+    try {
+      final googleSignIn = GoogleSignIn();
+      final account = await googleSignIn.signIn();
+      if (!mounted) return;
+
+      if (account != null) {
+        debugPrint('Signed in with email: ${account.email}');
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const RegistrationPage()),
+        );
+      }
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to sign in with Google'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  void _handleEmailSignUp() {
+    final name = nameController.text;
+    final email = emailController.text;
+    final password = passwordController.text;
+
+    if (name.isNotEmpty && email.isNotEmpty && password.isNotEmpty) {
+      debugPrint('Name: $name, Email: $email, Password: $password');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const RegistrationPage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all fields'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +96,7 @@ class SignUpPage extends StatelessWidget {
               height: 180,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.1),
+                color: Colors.white.withValues(alpha: 0.1),
               ),
             ),
           ),
@@ -49,7 +108,7 @@ class SignUpPage extends StatelessWidget {
               height: 120,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withOpacity(0.15),
+                color: Colors.white.withValues(alpha: 0.15),
               ),
             ),
           ),
@@ -92,20 +151,7 @@ class SignUpPage extends StatelessWidget {
                           width: 24,
                         ),
                         label: Text('Sign up with Google'),
-                        onPressed: () async {
-                          final GoogleSignIn googleSignIn = GoogleSignIn();
-                          try {
-                            final GoogleSignInAccount? account =
-                                await googleSignIn.signIn();
-                            if (account != null) {
-                              print('Signed in with email: \\${account.email}');
-                              // You can now use account.email, account.displayName, etc.
-                              // Proceed with your app logic (e.g., navigate, register, etc.)
-                            }
-                          } catch (error) {
-                            print('Google sign in error: \\$error');
-                          }
-                        },
+                        onPressed: _handleGoogleSignIn,
                       ),
                       SizedBox(height: 12),
                       Row(
@@ -153,16 +199,7 @@ class SignUpPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        onPressed: () {
-                          // Handle sign up logic here
-                          final name = nameController.text;
-                          final email = emailController.text;
-                          final password = passwordController.text;
-                          // For now, just print
-                          print(
-                            'Name: $name, Email: $email, Password: $password',
-                          );
-                        },
+                        onPressed: _handleEmailSignUp,
                         child: Text('Sign Up'),
                       ),
                       SizedBox(height: 16),

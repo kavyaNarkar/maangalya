@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'profile_page.dart';
 
 class MainHomeScreen extends StatefulWidget {
-  const MainHomeScreen({super.key});
+  final Map<String, dynamic>? profileData;
+  const MainHomeScreen({super.key, this.profileData});
 
   @override
   State<MainHomeScreen> createState() => _MainHomeScreenState();
@@ -11,38 +13,41 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
 
-  static const List<Widget> _pages = <Widget>[
-    Center(
-      child: Text(
-        'Home',
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Search',
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Favorites',
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Chats',
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Profile',
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-      ),
-    ),
-  ];
+  static List<Widget> _pagesWithProfile(Map<String, dynamic>? profileData) =>
+      <Widget>[
+        Center(
+          child: Text(
+            'Home',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Center(
+          child: Text(
+            'Search',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Center(
+          child: Text(
+            'Favorites',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Center(
+          child: Text(
+            'Chats',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
+        ),
+        profileData != null
+            ? ProfilePage(formData: profileData)
+            : Center(
+              child: Text(
+                'Profile',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+            ),
+      ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -93,7 +98,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
           ),
         ),
       ),
-      body: _pages[_selectedIndex],
+      body: _pagesWithProfile(widget.profileData)[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
