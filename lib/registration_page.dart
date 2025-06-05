@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+
 import 'main_home_screen.dart';
 
 class RegistrationPage extends StatefulWidget {
@@ -609,6 +610,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   builder:
                                       (context) =>
                                           MainHomeScreen(profileData: formData),
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Processing Registration'),
+                                  duration: Duration(seconds: 2),
                                 ),
                               );
                             }
